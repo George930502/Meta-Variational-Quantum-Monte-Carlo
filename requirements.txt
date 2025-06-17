@@ -1,0 +1,6 @@
+torch==2.7.0
+pyyaml
+numpy
+matplotlib
+higher
+tqdm

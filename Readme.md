@@ -6,15 +6,15 @@ This project is a PyTorch-based reproduction of the experiments from the paper
 ## Project Structure
 
 ```tree 
-├── README.md             # 專案說明與執行指南
-├── config.yaml           # 集中管理所有實驗配置
-├── requirements.txt      # 依賴套件
-├── main.py               # 主執行腳本， orchestrates everything
-├── models.py             # RBM 和 CNN 神經網路架構
-├── hamiltonians.py       # 定義和生成四種物理問題的哈密頓量
-├── vmc.py                # VMC 核心邏輯 (包含非對角哈密頓量的處理)
-├── maml.py               # MAML/foMAML 訓練與評估邏輯
-└── utils.py              # 繪圖及其他輔助函數
+├── README.md            
+├── config.yaml           
+├── requirements.txt      
+├── main.py              
+├── models.py            
+├── hamiltonians.py      
+├── vmc.py                
+├── maml.py              
+└── utils.py             
 ```
 
 - `README.md`: This file, providing an overview and instructions.
@@ -35,6 +35,8 @@ This project is a PyTorch-based reproduction of the experiments from the paper
     ```bash
     pip install -r requirements.txt
     ```
+    Note: For GPU support, please install the CUDA-specific version of PyTorch from https://pytorch.org/get-started/locally/
+    
 
 ## How to Run an Experiment
 
