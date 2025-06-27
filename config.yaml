@@ -1,0 +1,34 @@
+# =======================================================
+# Configuration for "Meta-learning of quantum systems"
+# =======================================================
+
+experiment:
+  problem_type: 'MaxCut' # Options: 'MaxCut', 'SK', 'TFIM1D', 'TFIM2D'
+  model_type: 'RBM'     # Options: 'RBM', 'CNN'
+  sigma: 0.5            # Task diversity (std dev). Paper tests 0.2, 0.5, 1.0
+
+problem_params:
+  num_spins: 49
+  transverse_field: 1.0
+
+model_params:
+  rbm_alpha: 1.0
+  cnn_depth: 16
+
+vmc:
+  n_samples: 1024
+  # NEW: MCMC sampler configuration
+  mcmc:
+    burn_in_sweeps: 100 # Number of sweeps to discard at the start of the chain
+    decorrelation_sweeps: 10 # Number of sweeps between collecting samples (K/N)
+
+maml:
+  meta_epochs: 50
+  meta_lr: 0.002
+  meta_batch_size: 16
+  inner_steps: 1
+  inner_lr: 0.005
+
+evaluation:
+  num_test_tasks: 8
+  finetune_steps: 300
