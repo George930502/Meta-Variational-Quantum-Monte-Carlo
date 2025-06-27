@@ -20,10 +20,9 @@ def mcmc_sampler(model, n_samples, num_spins, mcmc_params):
             if torch.rand(1).item() < acceptance_prob:
                 current_spins = spins_proposed
                 log_psi_current = log_psi_proposed
-
-        #print("Burn-in phase completed. Starting sampling...")
+        
         samples_list = []
-        for i in range(n_samples):
+        for _ in range(n_samples):
             for _ in range(decorrelation_sweeps * num_spins):
                 flip_idx = torch.randint(0, num_spins, (1,)).item()
                 spins_proposed = current_spins.clone()
@@ -33,7 +32,6 @@ def mcmc_sampler(model, n_samples, num_spins, mcmc_params):
                 if torch.rand(1).item() < acceptance_prob:
                     current_spins = spins_proposed
                     log_psi_current = log_psi_proposed
-            #print(f"Sample {i+1}/{n_samples} accepted.")
             samples_list.append(current_spins.clone())
             
     return torch.cat(samples_list, dim=0)

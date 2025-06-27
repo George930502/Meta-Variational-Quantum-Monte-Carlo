@@ -1,3 +1,4 @@
+# maml.py (Corrected)
 import torch
 from torch.optim import SGD
 import higher
@@ -5,6 +6,8 @@ from tqdm import tqdm
 import numpy as np
 
 from vmc import vmc_loss
+
+# run_maml_or_fomaml function remains the same
 
 def run_maml_or_fomaml(cfg, model, task_generator):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -14,7 +17,6 @@ def run_maml_or_fomaml(cfg, model, task_generator):
     is_fomaml = (cfg['training']['algorithm'] == 'foMAML')
 
     print(f"Starting meta-training for {cfg['training']['algorithm']}...")
-    
     for meta_epoch in range(cfg['maml']['meta_epochs']):
         meta_optimizer.zero_grad()
         meta_grad_accumulator = [torch.zeros_like(p, device=device) for p in model.parameters()]
@@ -25,11 +27,9 @@ def run_maml_or_fomaml(cfg, model, task_generator):
             
             track_grads = not is_fomaml
             with higher.innerloop_ctx(model, inner_opt, copy_initial_weights=True, track_higher_grads=track_grads) as (fmodel, diffopt):
-                # FIX: Pass the entire cfg object to vmc_loss
                 inner_loss, _ = vmc_loss(fmodel, task_H, cfg)
                 diffopt.step(inner_loss)
 
-                # FIX: Pass the entire cfg object to vmc_loss
                 meta_loss, _ = vmc_loss(fmodel, task_H, cfg)
                 
                 if is_fomaml:
@@ -45,10 +45,12 @@ def run_maml_or_fomaml(cfg, model, task_generator):
             p.grad = g / cfg['maml']['meta_batch_size']
         meta_optimizer.step()
         
-        print(f"Meta-Epoch [{meta_epoch+1}/{cfg['maml']['meta_epochs']}] done.")
+        if (meta_epoch + 1) % 10 == 0:
+            print(f"Meta-Epoch [{meta_epoch+1}/{cfg['maml']['meta_epochs']}] done.")
             
     print("Meta-training finished.")
     return model.state_dict()
+
 
 # --- FIX: Change the signature to accept a model instance ---
 def evaluate(cfg, initial_params, model_instance, task_generator):
