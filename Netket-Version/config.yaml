@@ -1,0 +1,37 @@
+# =======================================================
+# Configuration for "Meta-learning of quantum systems" - NetKet Version
+# =======================================================
+
+seed: 40
+
+experiment:
+  problem_type: 'MaxCut' # Options: 'MaxCut', 'SK', 'TFIM1D', 'TFIM2D'
+  model_type: 'RBM'     # Options: 'RBM', 'CNN'
+  sigma: 1.0            # Task diversity (std dev). Paper tests 0.2, 0.5, 1.0
+
+problem_params:
+  num_spins: 49
+  transverse_field: 1.0
+
+model_params:
+  rbm_alpha: 3.0
+  cnn_depth: 16
+
+vmc:
+  n_samples: 1024
+  n_chains: 16
+  # NetKet MCMC sampler configuration
+  mcmc:
+    burn_in_sweeps: 20 # Number of sweeps to discard at the start of the chain
+    decorrelation_sweeps: 5 # Number of sweeps between collecting samples
+
+maml:
+  meta_epochs: 50
+  meta_lr: 0.002
+  meta_batch_size: 16
+  inner_steps: 1
+  inner_lr: 0.005
+
+evaluation:
+  num_test_tasks: 8
+  finetune_steps: 300 
