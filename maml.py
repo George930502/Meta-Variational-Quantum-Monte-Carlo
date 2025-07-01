@@ -26,7 +26,7 @@ def run_maml_or_fomaml(cfg, model, task_generator):
             inner_opt = SGD(model.parameters(), lr=cfg['maml']['inner_lr'])
             
             track_grads = not is_fomaml
-            with higher.innerloop_ctx(model, inner_opt, copy_initial_weights=True, track_higher_grads=track_grads) as (fmodel, diffopt):
+            with higher.innerloop_ctx(model, inner_opt, copy_initial_weights=True, track_higher_grads=track_grads, device=device) as (fmodel, diffopt):
                 inner_loss, _ = vmc_loss(fmodel, task_H, cfg)
                 diffopt.step(inner_loss)
 
@@ -43,10 +43,9 @@ def run_maml_or_fomaml(cfg, model, task_generator):
         
         for p, g in zip(model.parameters(), meta_grad_accumulator):
             p.grad = g / cfg['maml']['meta_batch_size']
-        meta_optimizer.step()
+        meta_optimizer.step()   
         
-        if (meta_epoch + 1) % 10 == 0:
-            print(f"Meta-Epoch [{meta_epoch+1}/{cfg['maml']['meta_epochs']}] done.")
+        print(f"Meta-Epoch [{meta_epoch+1}/{cfg['maml']['meta_epochs']}] done.")
             
     print("Meta-training finished.")
     return model.state_dict()

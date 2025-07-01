@@ -4,7 +4,7 @@
 
 experiment:
   problem_type: 'MaxCut' # Options: 'MaxCut', 'SK', 'TFIM1D', 'TFIM2D'
-  model_type: 'RBM'     # Options: 'RBM', 'CNN'
+  model_type: 'CNN'     # Options: 'RBM', 'CNN'
   sigma: 0.5            # Task diversity (std dev). Paper tests 0.2, 0.5, 1.0
 
 problem_params:
@@ -13,10 +13,11 @@ problem_params:
 
 model_params:
   rbm_alpha: 1.0
-  cnn_depth: 16
+  cnn_depth: 8
 
 vmc:
   n_samples: 1024
+  batch_size: 128
   # NEW: MCMC sampler configuration
   mcmc:
     burn_in_sweeps: 100 # Number of sweeps to discard at the start of the chain

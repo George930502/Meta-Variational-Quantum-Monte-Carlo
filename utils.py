@@ -1,26 +1,30 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-def plot_vmc_comparison(results, config):
+def plot_curves(results, config):
     plt.style.use('seaborn-v0_8-whitegrid')
     fig, ax = plt.subplots(figsize=(10, 7))
     
     colors = {
-        'Pre-trained VMC': 'blue',
-        'Random Init VMC': 'black',
+        'MAML-SGD': 'blue',
+        'foMAML-SGD': 'red',
+        'Rand Init-SGD': 'black',
     }
 
     for label, data in results.items():
-        steps = np.arange(len(data))
-        ax.plot(steps, data, label=label, color=colors.get(label, 'gray'), linewidth=2)
+        mean_curve = np.mean(data, axis=1)
+        steps = np.arange(len(mean_curve))
+        
+        ax.plot(steps, mean_curve, label=label, color=colors.get(label, 'gray'), linewidth=2)
 
-    ax.set_xlabel("VMC Iteration", fontsize=14)
+    ax.set_xlabel("Number of Iterations", fontsize=14)
     ax.set_ylabel("Energy", fontsize=14)
-    title = f"VMC Convergence for {config['system']['name']}"
+    title = (f"Training Curves for {config['experiment']['problem_type']} with {config['experiment']['model_type']}\n"
+             f"(σ = {config['experiment']['sigma']})")
     ax.set_title(title, fontsize=16)
     ax.legend(fontsize=12)
     ax.tick_params(axis='both', which='major', labelsize=12)
     
     plt.tight_layout()
-    plt.savefig("vmc_comparison.png", dpi=300)
+    plt.savefig("training_curves.png", dpi=300)
     plt.show()

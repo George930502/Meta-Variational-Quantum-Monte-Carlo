@@ -35,7 +35,8 @@ class CNN(nn.Module):
         x = torch.relu(self.conv1(v_reshaped))
         x = x.view(batch_size, -1)
         x = self.fc1(x)
-        log_prob = torch.sum(nn.functional.softplus(x), dim=-1)
+        #log_prob = torch.sum(nn.functional.softplus(x), dim=-1)
+        log_prob = torch.sum(x, dim=-1)
         return log_prob
 
 def get_model(config):
